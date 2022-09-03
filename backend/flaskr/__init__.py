@@ -22,6 +22,7 @@ def create_app(test_config=None):
         
         questions = [question.format() for question in selection]
         current_questions = questions[start:end]
+        
         return current_questions
 
     @app.after_request
@@ -36,6 +37,7 @@ def create_app(test_config=None):
         categories_formatted = {category.id: category.type for category in categories}
         
         return jsonify({
+            'success': True,
             'categories': categories_formatted
         })
 
@@ -59,17 +61,20 @@ def create_app(test_config=None):
 
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
     def delete_question(question_id):
-        question = Question.query.get(question_id)
+        question = Question.query.filter(Question.id==question_id).one_or_none()
+        
+        if not question:
+            abort(404)       
         question.delete()
         
         return jsonify({
-            'message': 'Delete Successful'
+            'success': True,
+            'message': 'Question successfully deleted'
         })
 
     @app.route('/questions', methods=['POST'])
     def add_new_question():
         body = request.get_json()
-        
         new_question = body.get('question')
         answer = body.get('answer')
         category = body.get('category')
@@ -83,24 +88,24 @@ def create_app(test_config=None):
                 difficulty=difficulty
             )
             question.insert()
-            return jsonify({
-                'message': 'Create Successful'
-            })
         except:
             abort(422)
         
         return jsonify({
-            'message': 'Create Successful'
+            'success': True,
+            'message': 'Question successfully created'
         })
 
     @app.route('/questions/search', methods=['POST'])
     def search_questions():
-        search_term = request.form['searchTerm']
+        body = request.get_json()
+        search_term = body.get('searchTerm')
         search_query = '%{0}%'.format(search_term)
         questions = Question.query.filter(Question.question.ilike(search_query)).all()
 
         return jsonify({
-            'questions': questions,
+            'success': True,
+            'questions': [question.format() for question in questions],
             'total_questions': len(questions),
             'current_category': 'Science'
         })
@@ -108,49 +113,40 @@ def create_app(test_config=None):
     @app.route('/categories/<int:category_id>/questions')
     def get_category_questions(category_id):
         category = Category.query.get(category_id)
-        category_type = category.type
+        category_id = category.id
+        questions = Question.query.filter(Question.category==category_id).all()
         
-        questions = Question.query.filter(Question.category==category_type).all()
         return jsonify({
-            'questions': questions,
+            'success': True,
+            'questions': [question.format() for question in questions],
             'total_questions': len(questions),
-            'current_category': category.format()
+            'current_category': category.type
         })
 
-    """
-    @TODO:
-    Create a POST endpoint to get questions to play the quiz.
-    This endpoint should take category and previous question parameters
-    and return a random questions within the given category,
-    if provided, and that is not one of the previous questions.
-
-    TEST: In the "Play" tab, after a user selects "All" or a category,
-    one question at a time is displayed, the user is allowed to answer
-    and shown whether they were correct or not.
-    """
     @app.route('/quizzes', methods=['POST'])
-    def get_quiz_questions():
+    def get_quiz_question():
         body = request.get_json()
         previous_questions = body.get('previous_questions')
         quiz_category = body.get('quiz_category')
-        quiz_id = quiz_category.get('id', None)
-        questions = Question.query.all()
-        """
-        if quiz_id != None:
-            questions = Question.query.filter(Question.category==quiz_id).all()
+        questions = []
+        category_ids = [category.id for category in Category.query.all()]
+        
+        if quiz_category:
+            quiz_id = quiz_category['id']
+            if quiz_id not in category_ids:
+                questions = Question.query.all()
+            else:
+                questions = Question.query.filter(Question.category==quiz_id).all()
         else:
             questions = Question.query.all()
-        """ 
-        questions_formatted = [question.format() for question in questions]
-            
-        #questions_sent = []
-        question = random.choice(questions_formatted)
-            
-        while question in previous_questions:
-            question = random.choice(questions_formatted)
+    
+        question = random.choice(questions)
+        while question.id in previous_questions:
+            question = random.choice(questions)
         
         return jsonify({
-            'question': question
+            'success': True,
+            'question': question.format()
         })
 
     @app.errorhandler(404)

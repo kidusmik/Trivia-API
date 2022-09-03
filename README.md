@@ -63,7 +63,7 @@ All tests are kept in that file and should be maintained as updates are made to 
 ## Deployment N/A
 
 ## Authors
-Yours truly, Kidus Worku and the Udacity Team
+The Udacity Team and yours truly, Kidus Worku
 
 ## Acknowledgements 
 The awesome team at Udacity and the ALX-T community.

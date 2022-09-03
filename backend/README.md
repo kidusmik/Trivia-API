@@ -61,21 +61,21 @@ The API will return these errors when request fails:
 - 422: Unprocessable
 
 Errors are returned as JSON objects in the following format:
-```
+```json
 {
     'success': False,
     'error': 404,
     'message': 'resource could not be found'
 }
 ```
-```
+```json
 {
     'success': False,
     'error': 405,
     'message': 'method not allowed'
 }
 ```
-```
+```json
 {
     'success': False,
     'error': 422,
@@ -90,7 +90,7 @@ Errors are returned as JSON objects in the following format:
 - Request Arguments: None
 - Returns: An object with two keys, `success` with value `True` and `categories`, that contains an object of `id: category_string` key: value pairs.
 - `curl 127.0.0.1:5000/categories`
-```
+```json
 {  "categories": {
     "1": "Science", 
     "2": "Art", 
@@ -114,7 +114,7 @@ Errors are returned as JSON objects in the following format:
     
 - `curl 127.0.0.1:5000/questions`
 
-```
+```json
 {
   "categories": {
     "1": "Science", 
@@ -208,7 +208,7 @@ Errors are returned as JSON objects in the following format:
     
 - `curl -X DELETE http://127.0.0.1:5000/questions/4`
 
-```
+```json
 {  "message": "question successfully deleted", 
   "success": true
 }
@@ -221,7 +221,7 @@ Errors are returned as JSON objects in the following format:
 - `curl 127.0.0.1:5000/questions -X POST -H "Content-Type: application/json" -d '{"question": "Which country is known as the Horn of Africa?", "answer": "Ethiopia", "category": 3, "difficulty": 4}'`
 
 Returns success:
-```
+```json
 {
   "message": "question successfully created", 
   "success": true
@@ -231,7 +231,7 @@ Returns success:
 - `curl 127.0.0.1:5000/questions -X POST -H "Content-Type: application/json" -d '{"question": "Which country is known as the Horn of Africa?", "category": 3, "difficulty": 4}'`
 
 Returns with an error because it is missing the `answer` field:
-```
+```json
 {
   "error": 422, 
   "message": "unprocessable", 
@@ -240,11 +240,12 @@ Returns with an error because it is missing the `answer` field:
 ```
 
 #### POST /questions/search
-- General: Searches for a question based on the search term passed through the key `searchTerm` returns a success value, all the questions that match the search term and the total number of questions matching the search term.
+- General
+    - Searches for a question based on the search term passed through the key `searchTerm` returns a success value, all the questions that match the search term and the total number of questions matching the search term.
 
 - `curl 127.0.0.1:5000/questions/search -X POST -H "Content-Type: application/json" -d '{"searchTerm": "Tom"}'`
 
-```
+```json
 {
   "current_category": "Science", 
   "questions": [
@@ -262,11 +263,12 @@ Returns with an error because it is missing the `answer` field:
 ```
 
 #### GET /categories/{category_id}/questions
-- General: Fetches all questions of a specific category based on the `category_id` passed through the URL. Returns a success value, all the questions inside that category and  the total number of questions inside the category. 
+- General
+    - Fetches all questions of a specific category based on the `category_id` passed through the URL. Returns a success value, all the questions inside that category and  the total number of questions inside the category. 
 
 - `curl 127.0.0.1:5000/categories/1/questions`
 
-```
+```json
 {
   "current_category": "Science", 
   "questions": [
@@ -298,11 +300,12 @@ Returns with an error because it is missing the `answer` field:
 ```
 
 #### POST /quizzes
-- General: Sends a POST request in order to get the next question. Returns a success value, and a single question object.
+- General
+    - Sends a POST request in order to get the next question. Returns a success value, and a single question object.
 
 - `curl 127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [1, 7, 12, 5], "quiz_category": 2}'`
 
-```
+```json
 {
   "question": {
     "answer": "One", 

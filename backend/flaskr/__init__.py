@@ -69,18 +69,24 @@ def create_app(test_config=None):
         
         return jsonify({
             'success': True,
-            'message': 'Question successfully deleted'
+            'message': 'question successfully deleted'
         })
 
     @app.route('/questions', methods=['POST'])
     def add_new_question():
         body = request.get_json()
-        new_question = body.get('question')
-        answer = body.get('answer')
-        category = body.get('category')
-        difficulty = body.get('difficulty')
-        
+        new_question = body.get('question', None)
+        answer = body.get('answer', None)
+        category = body.get('category', None)
+        difficulty = body.get('difficulty', None)
+
         try:
+            if new_question=='' or new_question==None\
+            or answer=='' or answer==None\
+            or category not in [category.id for category in Category.query.all()]\
+            or difficulty not in [1, 2, 3, 4, 5]:
+                raise ValueError
+                
             question = Question(
                 question=new_question,
                 answer=answer,
@@ -93,7 +99,7 @@ def create_app(test_config=None):
         
         return jsonify({
             'success': True,
-            'message': 'Question successfully created'
+            'message': 'question successfully created'
         })
 
     @app.route('/questions/search', methods=['POST'])
@@ -111,9 +117,11 @@ def create_app(test_config=None):
         })
 
     @app.route('/categories/<int:category_id>/questions')
-    def get_category_questions(category_id):
-        category = Category.query.get(category_id)
-        category_id = category.id
+    def get_category_questions(category_id):  
+        category = Category.query.filter(Category.id==category_id).one_or_none()
+        
+        if not category:
+            abort(404) 
         questions = Question.query.filter(Question.category==category_id).all()
         
         return jsonify({
@@ -156,13 +164,21 @@ def create_app(test_config=None):
             'error': 404,
             'message': 'requested resource not found'
         }), 404
+    
+    @app.errorhandler(405)
+    def not_found(error):
+        return jsonify({
+            'success': False,
+            'error': 405,
+            'message': 'method not allowed'
+        }), 405
 
     @app.errorhandler(422)
     def unporcessable(error):
         return jsonify({
             'success': False,
             'error': 422,
-            'message': 'unprocessable entity'
+            'message': 'unprocessable'
         }), 422
 
     return app

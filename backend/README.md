@@ -48,13 +48,13 @@ flask run --reload
 
 The `--reload` flag will detect file changes and restart the server automatically.
 
-# API Reference
+## API Reference
 
-## Getting Started
+### Getting Started
 - Base URL: Currently the app can only be run locally and is not hosted at a base URL. The default backend host address is `127.0.0.1:5000`
 - Authentication: Currently the API does not require authentication of API keys.
 
-## Error Handling
+### Error Handling
 The API will return these errors when request fails:
 - 404: Bad Request
 - 405: Request Not Found
@@ -83,9 +83,9 @@ Errors are returned as JSON objects in the following format:
 }
 ```
 
-## Endpoints
+### Endpoints
 
-### GET /categories
+#### GET /categories
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
 - Returns: An object with two keys, `success` with value `True` and `categories`, that contains an object of `id: category_string` key: value pairs.
@@ -103,15 +103,17 @@ Errors are returned as JSON objects in the following format:
 }
 ```
 
-### GET /questions
+#### GET /questions
 - Fetches a list of questions in which the items are dictionary of formatted `Question` objects.
 - Request Arguments: None
 - Returns: An object with five keys:
--- `success`: with value `True`
--- `questions`: contains a list of paginated questions
--- `total_questions`: an integer with the total number of questions
--- `categories`: contains an object of `id: category_string` key: value pairs.
+    - `success`: with value `True`
+    - `questions`: contains a list of paginated questions
+    - `total_questions`: an integer with the total number of questions
+    - `categories`: contains an object of `id: category_string` key: value pairs.
+    
 - `curl 127.0.0.1:5000/questions`
+
 ```
 {
   "categories": {
@@ -200,10 +202,11 @@ Errors are returned as JSON objects in the following format:
 }
 ```
 
-### DELETE /questions/{question_id}
+#### DELETE /questions/{question_id}
 - General:
--- Deletes the question of the given ID if it exists, Returns success value and a message.
--- `curl -X DELETE http://127.0.0.1:5000/questions/4`
+    - Deletes the question of the given ID if it exists, Returns success value and a message.
+    
+- `curl -X DELETE http://127.0.0.1:5000/questions/4`
 
 ```
 {  "message": "question successfully deleted", 
@@ -211,11 +214,12 @@ Errors are returned as JSON objects in the following format:
 }
 ```
 
-### POST /questions
+#### POST /questions
 - General:
--- Creates a new question using the submitted `question`, `answer`, `category` and `difficulty` values. On success it returns a success value and a message. If any of the keys is missing or any of the values is either empty string or `None` it returns an error with code `422`. 
+    - Creates a new question using the submitted `question`, `answer`, `category` and `difficulty` values. On success it returns a success value and a message. If any of the keys is missing or any of the values is either empty string or `None` it returns an error with code `422`. 
 
 - `curl 127.0.0.1:5000/questions -X POST -H "Content-Type: application/json" -d '{"question": "Which country is known as the Horn of Africa?", "answer": "Ethiopia", "category": 3, "difficulty": 4}'`
+
 Returns success:
 ```
 {
@@ -223,7 +227,9 @@ Returns success:
   "success": true
 }
 ```
+
 - `curl 127.0.0.1:5000/questions -X POST -H "Content-Type: application/json" -d '{"question": "Which country is known as the Horn of Africa?", "category": 3, "difficulty": 4}'`
+
 Returns with an error because it is missing the `answer` field:
 ```
 {
@@ -233,9 +239,11 @@ Returns with an error because it is missing the `answer` field:
 }
 ```
 
-### POST /questions/search
+#### POST /questions/search
 - General: Searches for a question based on the search term passed through the key `searchTerm` returns a success value, all the questions that match the search term and the total number of questions matching the search term.
+
 - `curl 127.0.0.1:5000/questions/search -X POST -H "Content-Type: application/json" -d '{"searchTerm": "Tom"}'`
+
 ```
 {
   "current_category": "Science", 
@@ -253,9 +261,11 @@ Returns with an error because it is missing the `answer` field:
 }
 ```
 
-### GET /categories/{category_id}/questions
+#### GET /categories/{category_id}/questions
 - General: Fetches all questions of a specific category based on the `category_id` passed through the URL. Returns a success value, all the questions inside that category and  the total number of questions inside the category. 
+
 - `curl 127.0.0.1:5000/categories/1/questions`
+
 ```
 {
   "current_category": "Science", 
@@ -287,9 +297,11 @@ Returns with an error because it is missing the `answer` field:
 }
 ```
 
-### POST /quizzes
+#### POST /quizzes
 - General: Sends a POST request in order to get the next question. Returns a success value, and a single question object.
+
 - `curl 127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [1, 7, 12, 5], "quiz_category": 2}'`
+
 ```
 {
   "question": {

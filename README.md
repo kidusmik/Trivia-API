@@ -35,7 +35,9 @@ npm install // only once to install dependencies
 npm start 
 ```
 
-By default, the frontend will run on localhost:3000. 
+By default, the frontend will run on localhost:3000.
+
+> View the [Frontend README](./frontend/README.md) for more details.
 
 ### Tests
 In order to run tests navigate to the backend folder and run the following commands: 

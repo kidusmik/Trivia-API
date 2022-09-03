@@ -63,23 +63,23 @@ The API will return these errors when request fails:
 Errors are returned as JSON objects in the following format:
 ```json
 {
-    'success': False,
-    'error': 404,
-    'message': 'resource could not be found'
+    "success": False,
+    "error": 404,
+    "message": "resource could not be found"
 }
 ```
 ```json
 {
-    'success': False,
-    'error': 405,
-    'message': 'method not allowed'
+    "success": False,
+    "error": 405,
+    "message": "method not allowed"
 }
 ```
 ```json
 {
-    'success': False,
-    'error': 422,
-    'message': 'unprocessable'
+    "success": False,
+    "error": 422,
+    "message": "unprocessable"
 }
 ```
 
@@ -209,8 +209,9 @@ Errors are returned as JSON objects in the following format:
 - `curl -X DELETE http://127.0.0.1:5000/questions/4`
 
 ```json
-{  "message": "question successfully deleted", 
-  "success": true
+{
+    "message": "question successfully deleted",
+    "success": true
 }
 ```
 

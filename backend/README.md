@@ -63,21 +63,21 @@ The API will return these errors when request fails:
 Errors are returned as JSON objects in the following format:
 ```json
 {
-    "success": False,
+    "success": false,
     "error": 404,
     "message": "resource could not be found"
 }
 ```
 ```json
 {
-    "success": False,
+    "success": false,
     "error": 405,
     "message": "method not allowed"
 }
 ```
 ```json
 {
-    "success": False,
+    "success": false,
     "error": 422,
     "message": "unprocessable"
 }

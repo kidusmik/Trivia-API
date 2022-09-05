@@ -56,9 +56,10 @@ The `--reload` flag will detect file changes and restart the server automaticall
 
 ### Error Handling
 The API will return these errors when request fails:
-- 404: Bad Request
-- 405: Request Not Found
+- 404: Resource could not be found
+- 405: Method not allowed
 - 422: Unprocessable
+- 500: Internal Server Error
 
 Errors are returned as JSON objects in the following format:
 ```json
@@ -80,6 +81,13 @@ Errors are returned as JSON objects in the following format:
     "success": false,
     "error": 422,
     "message": "unprocessable"
+}
+```
+```json
+{
+    "success": false,
+    "error": 500,
+    "message": "internal server error"
 }
 ```
 
@@ -210,6 +218,7 @@ Errors are returned as JSON objects in the following format:
 
 ```json
 {
+    "deleted": 4,
     "message": "question successfully deleted",
     "success": true
 }
@@ -304,7 +313,7 @@ Returns with an error because it is missing the `answer` field:
 - General
     - Sends a POST request in order to get the next question. Returns a success value, and a single question object.
 
-- `curl 127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [1, 7, 12, 5], "quiz_category": 2}'`
+- `curl 127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [1, 7, 12, 5], "quiz_category": {"type": "Sports", "id": "6"}}'`
 
 ```json
 {
